@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function ScrollToTop() {
+// 1. Componente interno que utiliza usePathname()
+function ScrollToTopContent() {
   const [visibility, setVisibility] = useState<{ pathname: string; visible: boolean } | null>(null);
   const pathname = usePathname();
   const isVisible = visibility?.pathname === pathname && visibility.visible;
 
-  // Muestra u oculta el botón dependiendo de cuánto se haya desplazado la página (ej. > 300px)
+  // Muestra u oculta el botón dependiendo de cuánto se haya desplazado la página (> 300px)
   useEffect(() => {
     const toggleVisibility = () => {
       if (window.scrollY > 300) {
@@ -24,7 +25,12 @@ export default function ScrollToTop() {
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, [pathname]);
 
-  // Función para volver al inicio suavemente
+  // Scroll suave al cambiar de ruta automáticamente
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
+
+  // Función para volver al inicio al hacer clic
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -48,5 +54,14 @@ export default function ScrollToTop() {
         </motion.button>
       )}
     </AnimatePresence>
+  );
+}
+
+// 2. Exportación principal protegida con Suspense para el Build de Next.js
+export default function ScrollToTop() {
+  return (
+    <Suspense fallback={null}>
+      <ScrollToTopContent />
+    </Suspense>
   );
 }
