@@ -88,7 +88,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('tivi_cart');
+    }
+  };
 
   return (
     <CartContext.Provider

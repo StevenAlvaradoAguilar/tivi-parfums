@@ -4,14 +4,18 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, ShoppingBag, Shield, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useAuth, SignInButton, UserButton } from '@clerk/nextjs';
+import { useAuth, useUser, SignInButton, UserButton } from '@clerk/nextjs';
 
 export default function Navbar() {
   const pathname = usePathname();
   const { cart, setIsCartOpen } = useCart();
   
-  // Hook de Clerk para verificar si el usuario está autenticado
+  // Hooks de autenticación de Clerk
   const { isSignedIn, isLoaded } = useAuth();
+  const { user } = useUser();
+
+  // Verificación de rol de Administrador en Clerk (publicMetadata)
+  const isAdmin = user?.publicMetadata?.role === 'admin';
 
   // Cantidad total de productos en el carrito
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -71,14 +75,16 @@ export default function Navbar() {
             <Search className="w-5 h-5" />
           </Link>
 
-          {/* Botón Admin */}
-          <Link
-            href="/admin/products"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold rounded-full border border-amber-200/80 transition-all"
-          >
-            <Shield className="w-3.5 h-3.5 text-amber-700" />
-            <span>ADMIN</span>
-          </Link>
+          {/* 🔒 Botón Admin: Solo visible para usuarios logueados con rol 'admin' */}
+          {isLoaded && isSignedIn && isAdmin && (
+            <Link
+              href="/admin/products"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold rounded-full border border-amber-200/80 transition-all"
+            >
+              <Shield className="w-3.5 h-3.5 text-amber-700" />
+              <span>ADMIN</span>
+            </Link>
+          )}
 
           {/* Mis Pedidos */}
           <Link
@@ -88,11 +94,10 @@ export default function Navbar() {
             Mis Pedidos
           </Link>
 
-          {/* 🔐 AUTENTICACIÓN CON CLERK (HOOK useAuth) */}
+          {/* 🔐 AUTENTICACIÓN CON CLERK */}
           {isLoaded && (
             <>
               {!isSignedIn ? (
-                /* Si NO ha iniciado sesión */
                 <SignInButton mode="modal">
                   <button className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-stone-700 hover:text-amber-900 font-semibold border border-amber-200/80 bg-white px-3 py-1.5 rounded-full hover:border-amber-400 transition-all cursor-pointer shadow-2xs">
                     <User className="w-3.5 h-3.5 text-amber-700" />
@@ -100,7 +105,6 @@ export default function Navbar() {
                   </button>
                 </SignInButton>
               ) : (
-                /* Si SÍ ha iniciado sesión */
                 <div className="flex items-center justify-center">
                   <UserButton
                     appearance={{
