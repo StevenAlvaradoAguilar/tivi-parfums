@@ -22,8 +22,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'FRAGANCIAS', href: '/' },
-    { name: 'NOTAS OLFATIVAS', href: '/notas-olfativas' },
     { name: 'DISCOVERY SETS', href: '/discovery-sets' },
+    { name: 'NOTAS OLFATIVAS', href: '/notas-olfativas' },
     { name: 'NOSOTROS', href: '/nosotros' },
   ];
 

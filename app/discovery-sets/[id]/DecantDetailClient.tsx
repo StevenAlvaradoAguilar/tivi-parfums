@@ -21,11 +21,18 @@ export default function DecantDetailClient({ product }: { product: Product }) {
   const [selectedSize, setSelectedSize] = useState<'2ml' | '5ml' | '10ml' | 'bottle'>('2ml');
   const [quantity, setQuantity] = useState(1);
 
-  // Precios proporcionales
+  // 1. Extraemos el valor numérico del tamaño de la botella (ej: "50 ml" -> 50, "100ml" -> 100)
+  // Si no se encuentra un número válido, por defecto toma 50 ml.
+  const bottleVolume = parseInt(product.size.replace(/\D/g, ''), 10) || 50;
+
+  // 2. Calculamos el precio exacto por cada mililitro
+  const pricePerMl = product.price / bottleVolume;
+
+  // 3. Precios proporcionales dinámicos basados en el volumen real de la botella
   const options = {
-    '2ml': Math.round(product.price * 0.15),
-    '5ml': Math.round(product.price * 0.28),
-    '10ml': Math.round(product.price * 0.45),
+    '2ml': Math.round(pricePerMl * 2 * 1.1), // 10% de recargo para decants pequeños
+    '5ml': Math.round(pricePerMl * 5 * 1.1),
+    '10ml': Math.round(pricePerMl * 10 * 1.1),
     'bottle': product.price,
   };
 

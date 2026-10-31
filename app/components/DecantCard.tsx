@@ -8,12 +8,20 @@ interface Product {
   name: string;
   category: string;
   price: number;
+  size: string; // <-- Añadido para poder leer el tamaño de la botella
   image: string;
 }
 
 export default function DecantCard({ product, priority = false }: { product: Product; priority?: boolean }) {
-  // Precio estimado 'Desde' (versión 2ml)
-  const priceFrom = Math.round(product.price * 0.15);
+  // 1. Extraemos el valor numérico del tamaño de la botella (ej: "50 ml" -> 50, "100ml" -> 100)
+  // Por defecto usa 50 si no encuentra el valor.
+  const bottleVolume = parseInt(product.size.replace(/\D/g, ''), 10) || 50;
+
+  // 2. Calculamos el precio exacto por mililitro
+  const pricePerMl = product.price / bottleVolume;
+
+  // 3. Calculamos el precio 'Desde' basado estrictamente en el decant de 2 ml (proporcional)
+  const priceFrom = Math.round(pricePerMl * 2 * 1.1); // 10% de recargo para decants pequeños
 
   return (
     <Link 
@@ -44,7 +52,7 @@ export default function DecantCard({ product, priority = false }: { product: Pro
 
       {/* Sección Inferior: Precio + Botón Negro */}
       <div className="pt-3 border-t border-amber-100/80 space-y-3">
-        {/* Muestra del Precio Desde */}
+        {/* Muestra del Precio Desde (Proporcional a 2ml) */}
         <div className="flex items-baseline gap-1.5">
           <span className="text-xs text-stone-400 font-light">Desde</span>
           <span className="text-xl font-serif font-bold text-amber-950">

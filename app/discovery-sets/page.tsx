@@ -34,7 +34,7 @@ async function AsyncDiscoverySetsContent() {
             Discovery Sets & Decants
           </h1>
           <p className="text-stone-600 text-sm font-light leading-relaxed">
-            Descubre nuestra cuidada selección de fragancias nicho en atomizadores portátiles de cristal de 5ml y 10ml. Pruébalos en tu piel durante días antes de comprometerte con la botella completa.
+            Descubre nuestra cuidada selección de fragancias arabe, diseñador y nicho en atomizadores portátiles de cristal de 5ml y 10ml. Pruébalos en tu piel durante días antes de comprometerte con la botella completa.
           </p>
         </div>
 
