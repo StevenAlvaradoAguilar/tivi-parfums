@@ -52,7 +52,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-stone-600 mb-10 max-w-lg mx-auto font-light leading-relaxed text-sm md:text-base"
         >
-          Perfumes de autor elaborados con las notas esenciales más finas del mundo.
+          Perfumes únicos, inspirados en las esencias más finas y sofisticadas del mundo.
         </motion.p>
 
         {/* Botón Principal en Blanco, Negro & Dorado */}

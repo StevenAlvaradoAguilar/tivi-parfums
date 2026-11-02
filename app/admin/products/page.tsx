@@ -52,7 +52,7 @@ async function AsyncAdminProductsPage() {
             </div>
             <h1 className="text-3xl font-serif text-stone-900 font-medium">Gestión de Catálogo</h1>
             <p className="text-xs text-stone-500 font-light uppercase tracking-wider mt-1">
-              Administra las fragancias y decants publicados en TIVI
+              Administra las fragancias y decants publicados en TIVI Parfum CR.
             </p>
           </div>
 

@@ -80,7 +80,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
           {loading ? (
             <p className="text-center py-8 text-xs font-serif text-stone-500 uppercase tracking-widest">
-              Buscando en TIVI Atelier...
+              Buscando en TIVI Parfum CR...
             </p>
           ) : query.trim() !== '' && filteredProducts.length === 0 ? (
             <div className="text-center py-10 space-y-2">

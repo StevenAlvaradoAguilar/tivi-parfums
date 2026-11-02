@@ -8,7 +8,7 @@ import ScrollToTop from './components/ScrollToTop';
 import CartDrawer from './context/CartDrawer';
 
 export const metadata: Metadata = {
-  title: 'TIVI Parfum',
+  title: 'TIVI Parfum CR',
   description: 'Venta de perfumería, decants exclusivos y fragancias nicho.',
 };
 

@@ -6,12 +6,30 @@ import { useAuth } from '@clerk/nextjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ShoppingBag, Trash2, Loader2, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { buildOrderMessage, buildWhatsAppUrl, formatCRC } from '../lib/whatsapp';
+
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '';
+const SINPE_NUMBER = process.env.NEXT_PUBLIC_SINPE_NUMBER ?? '';
+const SINPE_HOLDER = process.env.NEXT_PUBLIC_SINPE_HOLDER ?? '';
+
+// Datos del pedido ya creado, guardados antes de vaciar el carrito
+interface SentOrder {
+  orderId: string;
+  total: number;
+  whatsappUrl: string;
+}
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, clearCart } = useCart();
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const { isSignedIn } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [sentOrder, setSentOrder] = useState<SentOrder | null>(null);
+
+  const closeDrawer = () => {
+    setIsCartOpen(false);
+    setSentOrder(null);
+  };
 
   // Función para procesar el pago y guardar en Supabase
   const handleCheckout = async () => {
@@ -43,9 +61,22 @@ export default function CartDrawer() {
       const data = await res.json();
 
       if (res.ok) {
-        alert(`¡Pedido realizado con éxito! 📦 ID de Orden: ${data.order.id}`);
+        const orderId: string = data.order.id;
+
+        // Mensaje de WhatsApp con el detalle y los datos de SINPE Móvil
+        const message = buildOrderMessage({
+          orderId,
+          items: cart,
+          sinpeNumber: SINPE_NUMBER,
+          sinpeHolder: SINPE_HOLDER || undefined,
+        });
+
+        setSentOrder({
+          orderId,
+          total: totalPrice,
+          whatsappUrl: buildWhatsAppUrl(WHATSAPP_NUMBER, message),
+        });
         clearCart();
-        setIsCartOpen(false);
       } else {
         alert(data.error || 'Ocurrió un error al procesar el pedido.');
       }
@@ -66,7 +97,7 @@ export default function CartDrawer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsCartOpen(false)}
+            onClick={closeDrawer}
             className="fixed inset-0 bg-stone-950/40 backdrop-blur-xs z-50 cursor-pointer"
           />
 
@@ -86,7 +117,7 @@ export default function CartDrawer() {
                   <h2 className="text-xl font-serif text-stone-900 font-medium">Tu Carrito</h2>
                 </div>
                 <button
-                  onClick={() => setIsCartOpen(false)}
+                  onClick={closeDrawer}
                   className="p-1 hover:bg-amber-100/50 rounded-full transition-colors text-stone-600 hover:text-stone-900 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
@@ -95,7 +126,30 @@ export default function CartDrawer() {
 
               {/* Lista de Productos */}
               <div className="mt-6 space-y-5 max-h-[60vh] overflow-y-auto pr-1">
-                {cart.length === 0 ? (
+                {sentOrder ? (
+                  <div className="space-y-4 text-sm text-stone-800">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-amber-400/80 mx-auto mb-2" />
+                      <p className="font-serif text-lg text-stone-900">¡Pedido registrado!</p>
+                      <span className="text-xs text-stone-500">
+                        Orden #{sentOrder.orderId}
+                      </span>
+                    </div>
+
+                    <div className="rounded-xl border border-amber-200/80 bg-amber-50 p-4 space-y-2">
+                      <p className="font-semibold text-amber-950">Pago por SINPE Móvil</p>
+                      <ol className="list-decimal pl-5 space-y-1 text-stone-700">
+                        <li>
+                          Envía <strong>{formatCRC(sentOrder.total)}</strong> al número{' '}
+                          <strong>{SINPE_NUMBER || '(sin configurar)'}</strong>
+                          {SINPE_HOLDER ? ` a nombre de ${SINPE_HOLDER}` : ''}.
+                        </li>
+                        <li>Presiona el botón para enviarnos tu pedido por WhatsApp.</li>
+                        <li>Adjunta el comprobante del SINPE en el chat.</li>
+                      </ol>
+                    </div>
+                  </div>
+                ) : cart.length === 0 ? (
                   <div className="text-center py-16 text-stone-500 font-light flex flex-col items-center">
                     <Sparkles className="w-8 h-8 text-amber-400/80 mb-3" />
                     <p className="font-serif text-lg text-stone-800 mb-1">Tu bolsa está vacía</p>
@@ -165,15 +219,35 @@ export default function CartDrawer() {
               </div>
             </div>
 
+            {/* Footer tras crear el pedido: enlace directo a WhatsApp */}
+            {sentOrder && (
+              <div className="border-t border-amber-200/80 pt-4 space-y-3 bg-[#fdfbf7]">
+                <a
+                  href={sentOrder.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full py-4 uppercase text-xs tracking-widest transition-all font-semibold flex justify-center items-center shadow-md"
+                >
+                  Enviar pedido por WhatsApp
+                </a>
+                <button
+                  onClick={closeDrawer}
+                  className="w-full text-center text-xs text-stone-500 underline cursor-pointer"
+                >
+                  Cerrar
+                </button>
+              </div>
+            )}
+
             {/* Footer con el Total y Botón Checkout */}
-            {cart.length > 0 && (
+            {!sentOrder && cart.length > 0 && (
               <div className="border-t border-amber-200/80 pt-4 space-y-4 bg-[#fdfbf7]">
                 <div className="flex justify-between items-center text-lg font-serif text-stone-900">
                   <span className="font-medium">Total</span>
                   <span className="font-bold text-amber-950 text-xl">₡{totalPrice.toLocaleString('es-CR')}</span>
                 </div>
                 <p className="text-[11px] text-stone-500 font-light leading-snug">
-                  Impuestos y gastos de envío calculados en el proceso de pago.
+                  Pagas por SINPE Móvil y confirmamos tu pedido por WhatsApp. El envío se coordina por el chat.
                 </p>
                 <button
                   onClick={handleCheckout}

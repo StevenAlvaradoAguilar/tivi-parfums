@@ -1,14 +1,20 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, ShoppingBag, Shield, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth, useUser, SignInButton, UserButton } from '@clerk/nextjs';
 
+const subscribe = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export default function Navbar() {
   const pathname = usePathname();
   const { cart, setIsCartOpen } = useCart();
+  const isMounted = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
   
   // Hooks de autenticación de Clerk
   const { isSignedIn, isLoaded } = useAuth();
@@ -37,7 +43,7 @@ export default function Navbar() {
             TIVI
           </span>
           <span className="text-[9px] uppercase tracking-[0.25em] text-amber-800 font-semibold -mt-1">
-            Parfums
+            Parfums CR
           </span>
         </Link>
 
@@ -125,7 +131,7 @@ export default function Navbar() {
             aria-label="Abrir Carrito"
           >
             <ShoppingBag className="w-5 h-5" />
-            {totalItems > 0 && (
+            {isMounted && totalItems > 0 && (
               <span className="absolute -top-1 -right-1 bg-amber-800 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                 {totalItems}
               </span>

@@ -92,7 +92,7 @@ export default function OrdersPage() {
             <Package className="w-12 h-12 text-amber-700/60 mb-4" />
             <h2 className="text-2xl font-serif text-stone-900 mb-2 font-medium">Inicia Sesión</h2>
             <p className="text-stone-600 font-light text-sm max-w-sm mb-6">
-              Por favor, inicia sesión para consultar tu historial de pedidos realizados en TIVI.
+              Por favor, inicia sesión para consultar tu historial de pedidos realizados en TIVI Parfums CR.
             </p>
             <Link
               href="/"

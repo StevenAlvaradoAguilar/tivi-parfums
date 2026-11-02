@@ -2,7 +2,7 @@ import { Sparkles, Flower2, Droplet, Wind } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Notas Olfativas | TIVI Parfums',
+  title: 'Notas Olfativas | TIVI Parfums CR',
   description: 'Descubre la pirámide olfativa y las familias de ingredientes que componen nuestras fragancias de autor.',
 };
 
@@ -119,7 +119,7 @@ export default function NotasOlfativasPage() {
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-serif text-stone-900 font-medium">Nuestras Familias Olfativas</h2>
             <p className="text-xs text-stone-500 font-light uppercase tracking-widest">
-              Explora los acordes que componen el catálogo de TIVI
+              Explora los acordes que componen el catálogo de TIVI Parfums CR y descubre tu perfil aromático ideal.
             </p>
           </div>
 

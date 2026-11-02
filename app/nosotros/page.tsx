@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Sparkles, ShieldCheck, HeartHandshake, Award, Feather } from 'lucide-react';
 
 export const metadata = {
-  title: 'Nosotros | TIVI Parfums',
-  description: 'Conoce la historia detrás de TIVI Parfums y nuestra pasión por la perfumería nicho de autor.',
+  title: 'Nosotros | TIVI Parfums CR',
+  description: 'Conoce la historia detrás de TIVI Parfums CR y nuestra pasión por la perfumería nicho de autor.',
 };
 
 export default function NosotrosPage() {
@@ -20,7 +20,7 @@ export default function NosotrosPage() {
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif text-stone-900 font-medium">
-            TIVI Parfums
+            TIVI Parfums CR
           </h1>
           <p className="text-stone-600 font-light text-sm md:text-base leading-relaxed">
             Redefiniendo el lujo de la alta perfumería de autor. Acercamos las obras maestras olfativas más exclusivas del mundo a los verdaderos amantes del perfume.
@@ -37,7 +37,7 @@ export default function NosotrosPage() {
               Aromas con identidad, creados para dejar huella.
             </h2>
             <p className="text-sm text-stone-600 font-light leading-relaxed">
-              En **TIVI Parfums** creemos que el perfume es la forma de arte más íntima. No es simplemente un accesorio, sino una firma invisible que comunica quién eres sin necesidad de pronunciar una palabra.
+              En **TIVI Parfums CR** creemos que el perfume es la forma de arte más íntima. No es simplemente un accesorio, sino una firma invisible que comunica quién eres sin necesidad de pronunciar una palabra.
             </p>
             <p className="text-sm text-stone-600 font-light leading-relaxed">
               Nacimos con la misión de democratizar el acceso a la perfumería de nicho y de autor. A través de nuestros **Decants Exclusivos** en atomizadores portátiles de cristal de 2ml, 5ml y 10ml, permitimos a nuestros clientes explorar y vestir múltiples creaciones internacionales antes de comprometerse con un frasco completo.
@@ -51,7 +51,7 @@ export default function NosotrosPage() {
                 &ldquo;El perfume es la forma más intensa del recuerdo.&rdquo;
               </blockquote>
               <span className="text-xs uppercase tracking-widest text-amber-900 font-semibold block">
-                — TIVI Atelier
+                — TIVI Parfums CR
               </span>
             </div>
           </div>
